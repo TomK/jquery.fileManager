@@ -19,6 +19,22 @@
 *
 */
 
+/*
+* Uncomment the line below to enable basic operation. By default this
+* will manage a folder called 'uploads' relative to this script's path.
+* 
+* You can change this folder to anything you like. The script will not
+* allow managing of files outside of this path.
+*
+* Advanced users may wish to write a separate php script to control the
+* ajax features of the File Manager.  Including callbacks for deleting
+* or renaming files.
+*/
+
+
+//jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
+
+
 class jqFileManager {
 	private static $data = array();
 	static function GetRelativePath($path) {
