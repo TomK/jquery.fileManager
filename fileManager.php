@@ -62,10 +62,9 @@ class jqFileManager {
 	static function ProcessAjax($rootPath,$deleteCallback=null,$renameCallback=null) {
 		$pMod = array_key_exists('path',$_GET) ? $_GET['path'] : '';
 		$path = $rootPath.'/'.trim($pMod,'/');
+		$path = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
 		$path = rtrim($path,'/');
 
-		// translate path
-		$path = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
 		if (!file_exists($path)) mkdir($path,octdec('0777'),true);
 
 		if (array_key_exists('delete',$_GET)) {
