@@ -64,11 +64,18 @@ class jqFileManager {
 		$path = $rootPath.'/'.trim($pMod,'/');
 		$path = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
 		$path = rtrim($path,'/');
+		if (strpos($path,$rootPath)===FALSE) $path = $rootPath;
 
 		if (!file_exists($path)) mkdir($path,octdec('0777'),true);
 
+		if (isset($_FILES['file'])) return self::ProcessUpload($path);
+
 		if (array_key_exists('delete',$_GET)) {
 			$from = $path.'/'.$_GET['delete'];
+	                if (strpos($from,$rootPath)===FALSE) {
+				echo 'alert("Can only perform operations within the root path");';
+				return false;
+			}
 			if (!file_exists($from)) {
 				echo 'alert("File or Folder no longer exists");';
 				return false;
@@ -86,6 +93,10 @@ class jqFileManager {
 			$from = $path.'/'.$_GET['mFrom'];
 			$to = $path.'/'.$_GET['mTo'];
 			$to = preg_replace('/\w+\/\.\.\//', '', $to);
+	                if (strpos($from,$rootPath)===FALSE || strpos($to,$rootPath)===FALSE) {
+				echo 'alert("Can only perform operations within the root path");';
+				return false;
+			}
 			if (file_exists($to)) {
 				echo 'alert("Destination already exists");';
 				return false;
