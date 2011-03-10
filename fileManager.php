@@ -132,11 +132,9 @@ class jqFileManager {
 		die(json_encode(array('rootPath'=>self::GetRelativePath($rootPath),'path'=>$uPath,'files'=>self::$data)));
 	}
 
-	public static function ProcessUpload($rootPath) {
+	public static function ProcessUpload($path) {
 		if (ob_get_level()) ob_end_clean();
-		$pMod = array_key_exists('path',$_GET) ? $_GET['path'] : '';
-		if (!file_exists($rootPath)) mkdir($rootPath);
-		$destination = realpath(rtrim($rootPath,'/').DIRECTORY_SEPARATOR.trim($pMod,'/'));
+		$destination = realpath($path);
 
 		// HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
