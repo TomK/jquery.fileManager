@@ -55,6 +55,11 @@ class jqFileManager {
 	static function GetPathCSS() {
 		return self::GetPathFolder().'jquery.fileManager.css';
 	}
+	static function ResolvePath($path) {
+		$newpath = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
+		if ($newpath != $path) $newpath = self::ResolvePath($newpath);
+		return $newpath;
+	}
 
 	static function AddIcon($path, $title='',$folder=false) {
 		self::$data[] = array('path'=>$path,'title'=>$title,'type'=>$folder);
@@ -62,7 +67,7 @@ class jqFileManager {
 	static function ProcessAjax($rootPath,$deleteCallback=null,$renameCallback=null) {
 		$pMod = array_key_exists('path',$_GET) ? $_GET['path'] : '';
 		$path = $rootPath.'/'.trim($pMod,'/');
-		$path = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
+		$path = self::ResolvePath($path);
 		$path = rtrim($path,'/');
 		if (strpos($path,$rootPath)===FALSE) $path = $rootPath;
 
@@ -71,7 +76,7 @@ class jqFileManager {
 		if (isset($_FILES['file'])) return self::ProcessUpload($path);
 
 		if (array_key_exists('delete',$_GET)) {
-			$from = $path.'/'.$_GET['delete'];
+			$from = self::ResolvePath($path.'/'.$_GET['delete']);
 	                if (strpos($from,$rootPath)===FALSE) {
 				echo 'alert("Can only perform operations within the root path");';
 				return false;
@@ -90,10 +95,8 @@ class jqFileManager {
 			return true;
 		}
 		if (array_key_exists('mFrom',$_GET) && array_key_exists('mTo',$_GET)) {
-			$from = $path.'/'.$_GET['mFrom'];
-			$to = $path.'/'.$_GET['mTo'];
-			$from = preg_replace('/[^\/]+\/\.\.\//', '', $from);
-			$to = preg_replace('/[^\/]+\/\.\.\//', '', $to);
+			$from = self::ResolvePath($path.'/'.$_GET['mFrom']);
+			$to = self::ResolvePath($path.'/'.$_GET['mTo']);
 	                if (strpos($from,$rootPath)===FALSE || strpos($to,$rootPath)===FALSE) {
 				echo 'alert("Can only perform operations within the root path");';
 				return false;
@@ -109,8 +112,6 @@ class jqFileManager {
 				echo 'alert("Cannot move or rename.");';
 				return false;
 			}
-			$from = $path.'/'.$_GET['mFrom'];
-			$to = $path.'/'.$_GET['mTo'];
 			if (is_callable($renameCallback)) call_user_func($renameCallback,$from,$to);
 			return true;
 		}
@@ -121,9 +122,7 @@ class jqFileManager {
 			$filename = basename($file);
 			if ($filename === '..' || $filename === '.') continue;
 			if (!is_dir($file) && array_key_exists('filter',$_GET) && !preg_match('/'.$_GET['filter'].'/i',$filename)) continue;
-		//	$fldr = is_dir($file) ? 'cmsMediaFolder cmsDrop cmsDrag' : 'cmsDrag';
 			self::AddIcon($filename,$filename,is_dir($file)?1:0);
-			//echo "<div class=\"cmsMediaIcon$fldr\" title=\"$filename\">$filename</div>";
 		}
 
 		// uPath is full path less rootpath less filename
