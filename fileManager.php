@@ -92,7 +92,8 @@ class jqFileManager {
 		if (array_key_exists('mFrom',$_GET) && array_key_exists('mTo',$_GET)) {
 			$from = $path.'/'.$_GET['mFrom'];
 			$to = $path.'/'.$_GET['mTo'];
-			$to = preg_replace('/\w+\/\.\.\//', '', $to);
+			$from = preg_replace('/[^\/]+\/\.\.\//', '', $from);
+			$to = preg_replace('/[^\/]+\/\.\.\//', '', $to);
 	                if (strpos($from,$rootPath)===FALSE || strpos($to,$rootPath)===FALSE) {
 				echo 'alert("Can only perform operations within the root path");';
 				return false;
