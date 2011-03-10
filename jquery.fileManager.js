@@ -28,18 +28,14 @@
 		baseClass		: 'fmBase',
 		folderClass		: 'fmFolder',
 		trashClass		: 'fmTrash',
-		loadingClass	: 'fmLoading',
+		loadingClass		: 'fmLoading',
 
-		highlightClass	: 'ui-state-highlight',
+		highlightClass		: 'ui-state-highlight',
 		hoverClass		: 'ui-state-active'
 	};
-	
+
 	$.fn.fileManager = function(settings, pluploadOptions) {
 		var mbOptions = $.extend({}, optionDefaults, settings);
-	//	mbOptions.events = $.extend({selectstart:function () { return false; },dblclick:ItemDblClick},mbOptions.events);
-//		if (!mbOptions.uploadPath) {
-//			alert('uploadPath not specified'); return;
-//		}
 		if (!mbOptions.ajaxPath) {
 			alert('ajaxPath not specified'); return;
 		}
@@ -48,13 +44,8 @@
 		var query = $.extend({},{path:mbOptions.path},mbOptions.get);
 		this.each(function () { // swap with getJSON so not duplicating ajax
 			var $sel = $(this);
-		//	$sel.empty();
-		//	$sel.append('<div>Loading FileManager...</div>');
 			$.getJSON(mbOptions.ajaxPath, query, function(data, status) {
-				//localOptions = mbOptions;
 				$sel.data('result',data);
-//				localOptions.path = data.path;
-//				localOptions.relPath = data.relPath;
 				$sel.data('options',mbOptions);
 				if (status != "success") {
 					var msg = "Sorry but there was an error: "+status;
@@ -86,7 +77,6 @@
 				
 				$('.'+mbOptions.baseClass,$sel).disableSelection();//bind('selectstart',function () { return false; });
 				$('.'+mbOptions.folderClass,$sel).bind('dblclick',ItemDblClick);
-//				DocReady(); // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> event
 			});
 
 			function UploadFiles(event) {
@@ -129,7 +119,6 @@
 				}
 			} else {
 				return Rename(from.data('item').target,from.data('item').path,to.data('item').path+'/'+from.data('item').path);
-				//ajaxData = {path:mbOptions.path,mFrom:from.data('item').path,mTo:to.data('item').path+'/'+from.data('item').path};
 			}
 		};
 		function Rename(view,from,to) {
@@ -141,7 +130,6 @@
 		function ItemDblClick() {
 			var item = $(this).data('item');
 			if (item.type != ICONTYPE_FOLDER) return;
-//			$(this).append($('<div></div>').addClass('fmLoading'));
 			var path = item.path;
 			if (item.target.data('result').path) path = item.target.data('result').path + '/' + path;
 			ReloadFolder(item.target,path);
@@ -210,7 +198,12 @@
 				.appendTo(icon);
 			var label = $('<div class="label">'+item.title+'</div>')
 				.prependTo(icon)//.bind('dblclick',function() {return false;})
-				.bind('click',function () { if (!mbOptions.readonly) { renamebox.show().focus(); return false;}});
+				.bind('click',function () {
+					if (!mbOptions.readonly) {
+						renamebox.show().focus();
+						return false;
+					}
+				});
 		}
 		
 		return $(this);
