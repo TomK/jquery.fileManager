@@ -41,6 +41,8 @@
 		}
 		if (mbOptions.fixedPath) mbOptions.path = mbOptions.fixedPath;
 
+		pluploadOptions = $.extend({url:mbOptions.ajaxPath,runtimes:'html5,html4'}, pluploadOptions);
+
 		var query = $.extend({},{path:mbOptions.path},mbOptions.get);
 		this.each(function () { // swap with getJSON so not duplicating ajax
 			var $sel = $(this);
