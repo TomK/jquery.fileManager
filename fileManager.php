@@ -32,14 +32,13 @@
 */
 
 
-//jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
+jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
 
 
 class jqFileManager {
 	private static $data = array();
 	static function GetRelativePath($path) {
-		//$path = realpath($path); // dont use realpath as it doesnt work with files that dont exist.
-		$path = preg_replace('/[^\/]+\/\.\.\/?/', '', $path);
+		$path = self::ResolvePath($path);
 		$pos = strpos($path,$_SERVER['DOCUMENT_ROOT']);
 		return '/'.ltrim(substr($path,$pos+strlen($_SERVER['DOCUMENT_ROOT'])),DIRECTORY_SEPARATOR);
 	}
