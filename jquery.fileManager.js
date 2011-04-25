@@ -83,18 +83,12 @@
 
 			function UploadFiles(event) {
 				$(event.data.container).toggle();
-				if (plupload && pluploadOptions) {
-					if (!$(event.data.container).pluploadQueue) {
-						$(event.data.container).html('Must install Plupload jquery plugin.'); return;
-					}
+				if (plupload) {
 					var opts = pluploadOptions;
 					opts.url = opts.url+ (opts.url.indexOf('?') < 0 ? '?' : '&') +'path='+$sel.data('result').path;
-					$(event.data.container).pluploadQueue(opts);
-					$(event.data.container).pluploadQueue().bind('FileUploaded',function (uploader,file,response) {
-						if (uploader.total.queued == 0) {
-							RefreshView($sel);
-						}
-					});
+					opts.init = $.extend({},opts.init,{FileUploaded:function (uploader,file,response) { if (uploader.total.queued == 0) RefreshView($sel); }});
+
+					$(event.data.container).plupload(opts);
 				} else {
 					$(event.data.container).html('Must install Plupload.');
 				}
