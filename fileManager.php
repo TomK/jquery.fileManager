@@ -32,15 +32,16 @@
 */
 
 
-jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
+//jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
 
 
 class jqFileManager {
 	private static $data = array();
 	static function GetRelativePath($path) {
 		$path = self::ResolvePath($path);
-		$pos = strpos($path,$_SERVER['DOCUMENT_ROOT']);
-		return '/'.ltrim(substr($path,$pos+strlen($_SERVER['DOCUMENT_ROOT'])),DIRECTORY_SEPARATOR);
+		$pos = strpos($path,realpath($_SERVER['DOCUMENT_ROOT']));
+		if ($pos === false) return $path;
+		return '/'.ltrim(substr($path,$pos+strlen(realpath($_SERVER['DOCUMENT_ROOT']))),DIRECTORY_SEPARATOR);
 	}
 	static function GetPathFolder() {
 		return self::GetRelativePath(dirname(__FILE__)).DIRECTORY_SEPARATOR;
