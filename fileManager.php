@@ -32,7 +32,7 @@
 */
 
 
-//jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
+jqFileManager::ProcessAjax(  dirname(__FILE__).'/uploads'  );
 
 
 class jqFileManager {
@@ -65,7 +65,7 @@ class jqFileManager {
 		self::$data[] = array('path'=>$path,'title'=>$title,'type'=>$folder);
 	}
 	static function ProcessAjax($rootPath,$deleteCallback=null,$renameCallback=null) {
-		$pMod = array_key_exists('path',$_GET) ? $_GET['path'] : '';
+		$pMod = array_key_exists('path',$_POST) ? $_POST['path'] : '';
 		$path = $rootPath.'/'.trim($pMod,'/');
 		$path = self::ResolvePath($path);
 		$path = rtrim($path,'/');
@@ -75,8 +75,8 @@ class jqFileManager {
 
 		if (isset($_FILES['file'])) return self::ProcessUpload($path);
 
-		if (array_key_exists('delete',$_GET)) {
-			$from = self::ResolvePath($path.'/'.$_GET['delete']);
+		if (isset($_POST['delete'])) {
+			$from = self::ResolvePath($path.'/'.$_POST['delete']);
 	                if (strpos($from,$rootPath)===FALSE) {
 				echo 'alert("Can only perform operations within the root path");';
 				return false;
@@ -94,9 +94,9 @@ class jqFileManager {
 			}
 			return true;
 		}
-		if (array_key_exists('mFrom',$_GET) && array_key_exists('mTo',$_GET)) {
-			$from = self::ResolvePath($path.'/'.$_GET['mFrom']);
-			$to = self::ResolvePath($path.'/'.$_GET['mTo']);
+		if (array_key_exists('mFrom',$_POST) && array_key_exists('mTo',$_POST)) {
+			$from = self::ResolvePath($path.'/'.$_POST['mFrom']);
+			$to = self::ResolvePath($path.'/'.$_POST['mTo']);
 	                if (strpos($from,$rootPath)===FALSE || strpos($to,$rootPath)===FALSE) {
 				echo 'alert("Can only perform operations within the root path");';
 				return false;
@@ -121,7 +121,7 @@ class jqFileManager {
 		foreach ($files as $file) {
 			$filename = basename($file);
 			if ($filename === '..' || $filename === '.') continue;
-			if (!is_dir($file) && array_key_exists('filter',$_GET) && !preg_match('/'.$_GET['filter'].'/i',$filename)) continue;
+			if (!is_dir($file) && array_key_exists('filter',$_POST) && !preg_match('/'.$_POST['filter'].'/i',$filename)) continue;
 			self::AddIcon($filename,$filename,is_dir($file)?1:0);
 		}
 

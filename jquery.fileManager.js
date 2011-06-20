@@ -46,7 +46,7 @@
 		var query = $.extend({},{path:mbOptions.path},mbOptions.get);
 		this.each(function () { // swap with getJSON so not duplicating ajax
 			var $sel = $(this);
-			$.getJSON(mbOptions.ajaxPath, query, function(data, status) {
+			$.ajax({url:mbOptions.ajaxPath,dataType:'json',type:'POST',data:query,success:function(data, status) {
 				$sel.data('result',data);
 				$sel.data('options',mbOptions);
 				if (status != "success") {
@@ -79,7 +79,7 @@
 				
 				$('.'+mbOptions.baseClass,$sel).disableSelection();//bind('selectstart',function () { return false; });
 				$('.'+mbOptions.folderClass,$sel).bind('dblclick',ItemDblClick);
-			});
+			}});
 
 			function UploadFiles(event) {
 				$(event.data.container).toggle();
@@ -109,7 +109,7 @@
 			if ($(this).hasClass(mbOptions.trashClass)) {
 				if (confirm('Really delete "'+from.data('item').title+'"?  This cannot be undone')) {
 					ajaxData = {path:mbOptions.path,'delete':from.data('item').path};
-					$.ajax({url:mbOptions.ajaxPath,data:ajaxData,dataType:'script',complete:function() {
+					$.ajax({url:mbOptions.ajaxPath,data:ajaxData,type:'POST',dataType:'script',complete:function() {
 						RefreshView(from.data('item').target);
 					}});
 				}
@@ -119,7 +119,7 @@
 		};
 		function Rename(view,from,to) {
 			ajaxData = {path:mbOptions.path,mFrom:from,mTo:to};
-			$.ajax({url:mbOptions.ajaxPath,data:ajaxData,dataType:'script',complete:function() {
+			$.ajax({url:mbOptions.ajaxPath,data:ajaxData,type:'POST',dataType:'script',complete:function() {
 				RefreshView(view);
 			}});
 		}
