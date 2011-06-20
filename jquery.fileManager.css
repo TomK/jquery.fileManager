@@ -1,8 +1,8 @@
 .fmBase { float:left; margin:8px; width:64px; height:64px; border: 1px none #333; cursor:hand; position:relative;
 	background-image:url(images/file64.png); background-repeat:no-repeat; background-position:top left;
-	padding-bottom:1em; overflow:hidden }
+	padding-bottom:1em; overflow:hidden; border: 1px solid transparent; }
 .fmBase .label { position:absolute; top:62px;left:2px;right:2px; text-align:center; overflow:hidden; white-space:nowrap; font-size:10px }
-.fmFolder { background-image:url(images/folder64.png); }
+.fmFolder { background-image:url(images/folder64.png) !important; }
 .fmTrash { background-image:url(images/fulltrash64.png) !important; cursor:default; float:right; }
 .fmIconHighlight { background-color:gold; }
 .fmIconHover { background-color:lightblue; }
