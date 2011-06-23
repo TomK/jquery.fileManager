@@ -85,8 +85,8 @@
 				$(event.data.container).toggle();
 				if (plupload) {
 					var opts = pluploadOptions;
-					opts.url = opts.url+ (opts.url.indexOf('?') < 0 ? '?' : '&') +'path='+$sel.data('result').path;
 					opts.init = $.extend({},opts.init,{FileUploaded:function (uploader,file,response) { if (uploader.total.queued == 0) RefreshView($sel); }});
+					opts.multipart_params = { 'path' : $sel.data('result').path };
 
 					$(event.data.container).plupload(opts);
 				} else {
