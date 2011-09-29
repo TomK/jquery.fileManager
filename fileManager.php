@@ -128,6 +128,7 @@ class jqFileManager {
 		// uPath is full path less rootpath less filename
 		$uPath = substr(self::GetRelativePath($path),strlen(self::GetRelativePath($rootPath)));
 		if (!$uPath) $uPath = '';
+		header('Content-Type: application/json');
 		die(json_encode(array('rootPath'=>self::GetRelativePath($rootPath),'path'=>$uPath,'files'=>self::$data)));
 	}
 
@@ -136,7 +137,7 @@ class jqFileManager {
 		$destination = realpath($path);
 
 		// HTTP headers for no cache etc
-		header('Content-type: text/plain; charset=UTF-8');
+		header('Content-type: application/json; charset=UTF-8');
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 		header("Cache-Control: no-store, no-cache, must-revalidate");
