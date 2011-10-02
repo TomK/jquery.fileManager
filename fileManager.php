@@ -117,6 +117,7 @@ class jqFileManager {
 		}
 
 		$glob = glob($path.'/{,.}*',GLOB_BRACE);
+		natcasesort($glob);
 		$files = array_merge(array_filter($glob, 'is_dir'),array_filter($glob, 'is_file'));
 		foreach ($files as $file) {
 			$filename = basename($file);
