@@ -130,7 +130,7 @@ class jqFileManager {
 		$uPath = substr(self::GetRelativePath($path),strlen(self::GetRelativePath($rootPath)));
 		if (!$uPath) $uPath = '';
 		header('Content-Type: application/json');
-		die(json_encode(array('rootPath'=>self::GetRelativePath($rootPath),'path'=>$uPath,'files'=>self::$data)));
+		echo json_encode(array('rootPath'=>self::GetRelativePath($rootPath),'path'=>$uPath,'files'=>self::$data));
 	}
 
 	public static function ProcessUpload($path) {
@@ -161,8 +161,9 @@ class jqFileManager {
 
 		// Clean the fileName for security reasons
 		$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
-		if (is_dir($targetDir . DIRECTORY_SEPARATOR . $fileName)) die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-
+		if (is_dir($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
+			echo '{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}';
+		}
 
 		// Create target dir
 		if (!file_exists($targetDir)) {
@@ -181,8 +182,9 @@ class jqFileManager {
 			}
 
 			closedir($dir);
-		} else
-			die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
+		} else {
+			echo '{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}';
+		}
 
 		$contentType = '';
 		// Look for the content type header
@@ -203,15 +205,18 @@ class jqFileManager {
 					if ($in) {
 						while ($buff = fread($in, 4096))
 							fwrite($out, $buff);
-					} else
-						die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+					} else {
+						echo '{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}';
+					}
 
 					fclose($out);
 					unlink($_FILES['file']['tmp_name']);
-				} else
-					die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-			} else
-				die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
+				} else {
+					echo '{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}';
+				}
+			} else {
+				echo '{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}';
+			}
 		} else {
 			// Open temp file
 			$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
@@ -222,16 +227,18 @@ class jqFileManager {
 				if ($in) {
 					while ($buff = fread($in, 4096))
 						fwrite($out, $buff);
-				} else
-					die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+				} else {
+					echo '{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}';
+				}
 
 				fclose($out);
-			} else
-				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+			} else {
+				echo '{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}';
+			}
 		}
 
 		// Return JSON-RPC response
-		die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+		echo '{"jsonrpc" : "2.0", "result" : null, "id" : "id"}';
 	}
 }
 ?>
