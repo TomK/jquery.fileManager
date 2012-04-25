@@ -165,7 +165,8 @@
 			
 			if (item.type == ICONTYPE_FILE && item.path.search(/.jpeg|.jpg|.png|.gif|.tif|.tiff/i) > -1) {
 				icon.css('background-image','none');
-				icon.append('<img style="width:100%;height:100%" src="'+item.fullPath+'">');
+				var iconPath = (item.icon) ? item.icon : item.fullPath;
+				icon.append('<img style="width:100%;height:100%" src="'+iconPath+'">');
 			}
 			
 			// events

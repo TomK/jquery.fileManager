@@ -36,12 +36,22 @@
 
 
 class jqFileManager {
+	private static $docroot = NULL;
+	public static function SetDocRoot($path) {
+		self::$docroot = $path;
+	}
+	private static $relroot = '/';
+	public static function SetRelRoot($path) {
+		self::$relroot = $path;
+	}
+	
 	private static $data = array();
 	static function GetRelativePath($path) {
-		$path = self::ResolvePath($path);
-		$pos = strpos($path,realpath($_SERVER['DOCUMENT_ROOT']));
-		if ($pos === false) return $path;
-		return '/'.ltrim(substr($path,$pos+strlen(realpath($_SERVER['DOCUMENT_ROOT']))),DIRECTORY_SEPARATOR);
+		$docroot = self::$docroot ? self::$docroot : $_SERVER['DOCUMENT_ROOT'];
+		$path = realpath($path);
+		$path = str_replace($docroot,self::$relroot,$path);
+		$path = str_replace(DIRECTORY_SEPARATOR,'/',$path);
+		return $path;
 	}
 	static function GetPathFolder() {
 		return self::GetRelativePath(dirname(__FILE__)).DIRECTORY_SEPARATOR;
@@ -61,10 +71,10 @@ class jqFileManager {
 		return $newpath;
 	}
 
-	static function AddIcon($path, $title='',$folder=false) {
-		self::$data[] = array('path'=>$path,'title'=>$title,'type'=>$folder);
+	static function AddIcon($path, $title='',$folder=false,$icon='') {
+		self::$data[] = array('path'=>$path,'title'=>$title,'type'=>$folder,'icon'=>$icon);
 	}
-	static function ProcessAjax($rootPath,$deleteCallback=null,$renameCallback=null) {
+	static function ProcessAjax($rootPath,$deleteCallback=null,$renameCallback=null,$iconCallback=null) {
 		$pMod = array_key_exists('path',$_POST) ? $_POST['path'] : '';
 		$path = $rootPath.'/'.trim($pMod,'/');
 		$path = self::ResolvePath($path);
@@ -123,7 +133,8 @@ class jqFileManager {
 			$filename = basename($file);
 			if ($filename === '..' || $filename === '.') continue;
 			if (!is_dir($file) && array_key_exists('filter',$_POST) && !preg_match('/'.$_POST['filter'].'/i',$filename)) continue;
-			self::AddIcon($filename,$filename,is_dir($file)?1:0);
+			$icon = (is_callable($iconCallback)) ? call_user_func($iconCallback,$file) : '';
+			self::AddIcon($filename,$filename,is_dir($file)?1:0,$icon);
 		}
 
 		// uPath is full path less rootpath less filename
