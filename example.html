@@ -1,0 +1,51 @@
+<html>
+<head>
+<!-- include stylesheet -->
+<link type="text/css" rel="stylesheet" href="jquery.fileManager.css" />
+
+<!-- include required jQuery + jQueryUI -->
+<link type="text/css" rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" />
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="jquery.fileManager.js"></script>
+</head>
+
+<body>
+<h1>jQuery.fileManager</h1>
+
+<h2>Simple</h2>
+<!-- create the container -->
+<div id="filemanager"></div>
+
+<!-- initialise the script, passing the path to the php script -->
+<script type="text/javascript">
+	$('#filemanager').fileManager({ajaxPath:'fileManager.php'});
+</script>
+
+
+<h2>Simple with upload</h2>
+<div id="filemanager_upload"></div>
+<script type="text/javascript">
+	$('#filemanager_upload').fileManager({ajaxPath:'fileManager.php',upload:true});
+</script>
+
+
+<h2>Simple with events</h2>
+<div id="filemanager_events"></div>
+<script type="text/javascript">
+	$('#filemanager_events').fileManager({
+		ajaxPath:'fileManager.php',
+		upload:true,
+		events:{
+			click: function() {
+				var data = $(this).data();
+				alert(data.item.title + ' = ' + data.item.fullPath);
+			}
+		}
+	});
+</script>
+
+
+</body>
+</html>

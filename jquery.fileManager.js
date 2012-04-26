@@ -47,6 +47,10 @@
 		this.each(function () { // swap with getJSON so not duplicating ajax
 			var $sel = $(this);
 			$.ajax({url:mbOptions.ajaxPath,dataType:'json',type:'POST',data:query,success:function(data, status) {
+				if (!data) {
+					$sel.append('No data received. Please ensure ProcessAjax is called in your ajax script.');
+					return;
+				}
 				$sel.data('result',data);
 				$sel.data('options',mbOptions);
 				if (status != "success") {
